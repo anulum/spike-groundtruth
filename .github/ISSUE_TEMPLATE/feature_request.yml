@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Commercial license available
+# © Concepts 1996–2026 Miroslav Šotek. All rights reserved.
+# © Code 2020–2026 Miroslav Šotek. All rights reserved.
+# ORCID: 0009-0009-3560-0851
+# Contact: www.anulum.li | protoscience@anulum.li
+# SPIKE-GROUNDTRUTH — repository configuration
+
+name: Feature request
+description: Propose a concrete stimulus or repository validation use case.
+title: "[feature] "
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case and affected contract
+      description: State the required behaviour and its current limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Acceptance evidence
+      description: Describe observable success, refusal cases and actual producer or consumer.
+    validations:
+      required: true

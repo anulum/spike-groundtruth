@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Commercial license available
+# © Concepts 1996–2026 Miroslav Šotek. All rights reserved.
+# © Code 2020–2026 Miroslav Šotek. All rights reserved.
+# ORCID: 0009-0009-3560-0851
+# Contact: www.anulum.li | protoscience@anulum.li
+# SPIKE-GROUNDTRUTH — repository configuration
+
+cff-version: 1.2.0
+message: Cite the exact source revision when referring to this repository tooling.
+type: software
+title: SPIKE-GROUNDTRUTH
+abstract: Local repository validation tooling and architecture for reproducible synthetic stimuli.
+authors:
+  - family-names: Šotek
+    given-names: Miroslav
+    orcid: https://orcid.org/0009-0009-3560-0851
+license: AGPL-3.0-or-later
+contact:
+  - family-names: Šotek
+    given-names: Miroslav
+    email: protoscience@anulum.li

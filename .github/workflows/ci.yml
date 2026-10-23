@@ -1,0 +1,433 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Commercial license available
+# © Concepts 1996–2026 Miroslav Šotek. All rights reserved.
+# © Code 2020–2026 Miroslav Šotek. All rights reserved.
+# ORCID: 0009-0009-3560-0851
+# Contact: www.anulum.li | protoscience@anulum.li
+# SPIKE-GROUNDTRUTH — repository validation tooling
+
+name: Repository validation
+'on':
+  push:
+    branches:
+    - main
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: groundtruth-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality_main:
+    name: quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Install exact verified native validation tools
+      run: make native-tools
+    - name: Static policy and strict native types
+      run: '.venv/bin/ruff check tools tests
+
+        .venv/bin/ruff format --check tools tests
+
+        .venv/bin/mypy --strict tools tests
+
+        .venv/bin/python tools/check_repository_metadata.py --root . --json
+
+        .venv/bin/python tools/check_source_provenance.py --root . --json
+
+        .venv/bin/python tools/check_workflow_policy.py --root . --json
+
+        .venv/bin/python tools/check_dependency_alignment.py --root . --json
+
+        .venv/bin/python tools/check_repository_inventory.py --root . --mode verify --json
+
+        .venv/bin/reuse lint
+
+        '
+  quality_hooks:
+    name: hooks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Install exact verified native validation tools
+      run: make native-tools
+    - name: Exact native hook parity
+      run: '.venv/bin/pre-commit run --all-files --show-diff-on-failure
+
+        '
+  tests_main:
+    name: infrastructure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Install exact verified native validation tools
+      run: make native-tools
+    - name: Real infrastructure public entry points
+      run: '.venv/bin/python -m pytest tests --cov --cov-report=term-missing --cov-report=json:.tool-cache/coverage/report.json
+
+        '
+  docs_main:
+    name: documentation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Strict native documentation
+      run: '.venv/bin/python tools/check_documentation.py --root . --json
+
+        '
+  security_audit:
+    name: audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Install exact verified native validation tools
+      run: make native-tools
+    - name: Blocking complete dependency audit
+      run: '.venv/bin/pip-audit -r requirements-dev.txt --disable-pip --no-deps --cache-dir .tool-cache/pip-audit
+
+        .venv/bin/bandit --ini /dev/null --ignore-nosec --severity-level all --confidence-level all -r
+        tools
+
+        .venv/bin/zizmor --offline --no-progress --persona pedantic --min-severity informational .github/workflows
+
+        .tool-cache/native/actionlint/actionlint -color=false
+
+        .venv/bin/python tools/preflight.py --root . --check secret-scan --json
+
+        '
+  security_codeql:
+    name: analysis
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Retrieve the exact CodeQL analysis bundle
+      env:
+        CODEQL_BUNDLE_URL: https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.2/codeql-bundle-linux64.tar.gz
+        CODEQL_BUNDLE_SHA256: f002864be6dd8d5d7bdb123aaf7291ec8e291012bd9f70b6d2362f730db52aeb
+      run: 'curl --fail --location --silent --show-error --max-time 180 --output "$RUNNER_TEMP/codeql-bundle.tar.gz"
+        "$CODEQL_BUNDLE_URL"
+
+        printf ''%s  %s\n'' "$CODEQL_BUNDLE_SHA256" "$RUNNER_TEMP/codeql-bundle.tar.gz" | sha256sum --check
+        --status
+
+        '
+    - uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee
+      with:
+        languages: python
+        tools: ${{ runner.temp }}/codeql-bundle.tar.gz
+        build-mode: none
+        ram: '2048'
+        threads: '1'
+    - uses: github/codeql-action/analyze@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee
+      with:
+        upload: never
+        upload-database: 'false'
+        wait-for-processing: 'false'
+  security_sbom:
+    name: sbom
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Development supply-chain inventory
+      run: '.venv/bin/cyclonedx-py environment .venv/bin/python --output-reproducible --of JSON -o .tool-cache/development-sbom.json
+
+        '
+  security_scorecard:
+    name: local-supply-chain
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UV_LINK_MODE: hardlink
+      UV_CACHE_DIR: ${{ github.workspace }}/.tool-cache/uv
+      TMPDIR: ${{ github.workspace }}/.tool-cache/tmp
+      PRE_COMMIT_HOME: ${{ github.workspace }}/.tool-cache/pre-commit
+      RAYON_NUM_THREADS: '1'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: 'false'
+    - name: Prepare bounded working directories
+      run: mkdir -p .tool-cache/tmp .tool-cache/uv
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      with:
+        python-version: 3.13.16
+    - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+      with:
+        version: 0.13.4
+        checksum: 2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f
+        enable-cache: 'false'
+    - name: Install exact development graph
+      run: 'uv venv --python 3.13.16 .venv
+
+        uv pip install --python .venv/bin/python --require-hashes --build-constraints requirements-dev.txt
+        --default-index https://pypi.org/simple -r requirements-dev.txt
+
+        '
+    - name: Install exact verified native validation tools
+      run: make native-tools
+    - name: Local supply-chain policy; no hosted score
+      run: '.venv/bin/python tools/check_source_provenance.py --root . --json
+
+        .venv/bin/python tools/check_workflow_policy.py --root . --json
+
+        .venv/bin/python tools/check_dependency_alignment.py --root . --json
+
+        '
+  quality:
+    name: quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    needs:
+    - quality_main
+    - quality_hooks
+    if: ${{ always() }}
+    env:
+      RESULT_0: ${{ needs.quality_main.result }}
+      RESULT_1: ${{ needs.quality_hooks.result }}
+    steps:
+    - name: Require every actual category member
+      run: 'test "$RESULT_0" = success
+
+        test "$RESULT_1" = success
+
+        '
+  tests:
+    name: tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    needs:
+    - tests_main
+    if: ${{ always() }}
+    env:
+      RESULT_0: ${{ needs.tests_main.result }}
+    steps:
+    - name: Require every actual category member
+      run: 'test "$RESULT_0" = success
+
+        '
+  docs:
+    name: docs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    needs:
+    - docs_main
+    if: ${{ always() }}
+    env:
+      RESULT_0: ${{ needs.docs_main.result }}
+    steps:
+    - name: Require every actual category member
+      run: 'test "$RESULT_0" = success
+
+        '
+  security:
+    name: security
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    needs:
+    - security_audit
+    - security_codeql
+    - security_sbom
+    - security_scorecard
+    if: ${{ always() }}
+    env:
+      RESULT_0: ${{ needs.security_audit.result }}
+      RESULT_1: ${{ needs.security_codeql.result }}
+      RESULT_2: ${{ needs.security_sbom.result }}
+      RESULT_3: ${{ needs.security_scorecard.result }}
+    steps:
+    - name: Require every actual category member
+      run: 'test "$RESULT_0" = success
+
+        test "$RESULT_1" = success
+
+        test "$RESULT_2" = success
+
+        test "$RESULT_3" = success
+
+        '
+  required:
+    name: required
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    needs:
+    - quality
+    - tests
+    - docs
+    - security
+    if: ${{ always() }}
+    env:
+      QUALITY_RESULT: ${{ needs.quality.result }}
+      TESTS_RESULT: ${{ needs.tests.result }}
+      DOCS_RESULT: ${{ needs.docs.result }}
+      SECURITY_RESULT: ${{ needs.security.result }}
+    steps:
+    - name: Require every actual category result
+      run: 'test "$QUALITY_RESULT" = success
+
+        test "$TESTS_RESULT" = success
+
+        test "$DOCS_RESULT" = success
+
+        test "$SECURITY_RESULT" = success
+
+        '

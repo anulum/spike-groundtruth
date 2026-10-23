@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Commercial license available
+# © Concepts 1996–2026 Miroslav Šotek. All rights reserved.
+# © Code 2020–2026 Miroslav Šotek. All rights reserved.
+# ORCID: 0009-0009-3560-0851
+# Contact: www.anulum.li | protoscience@anulum.li
+# SPIKE-GROUNDTRUTH — repository configuration
+
+name: Bug report
+description: Report reproducible repository validation behaviour.
+title: "[bug] "
+body:
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: Expected and observed behaviour
+      description: Include the safe command and structured report; remove private data.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Source revision and environment
+      description: Exact revision, Python version, lock identity and operating system.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal shareable reproduction
+      description: Provide actual file inputs without secrets, private models or training data.
+    validations:
+      required: true

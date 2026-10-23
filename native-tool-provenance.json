@@ -1,0 +1,33 @@
+{
+  "observed_utc": "2026-10-23T01:57:27.498033+00:00",
+  "tools": [
+    {
+      "name": "actionlint",
+      "version": "v1.7.12",
+      "source_repository": "https://github.com/rhysd/actionlint",
+      "source_commit": "914e7df21a07ef503a81201c76d2b11c789d3fca",
+      "upstream_project_spdx": "MIT",
+      "license_blob_sha": "69292aedc9113498e83d72e48d38894f9a2a2eb6",
+      "archive_url": "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz",
+      "archive_sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8",
+      "archive_member": "actionlint",
+      "binary_sha256": "c872d6db8c6bf83a8eaa704fc93999f027d55dffbc63b8a6abdccb47df5f4cd4",
+      "local_path": ".tool-cache/native/actionlint/actionlint",
+      "platform": "linux-x86_64"
+    },
+    {
+      "name": "gitleaks",
+      "version": "v8.30.1",
+      "source_repository": "https://github.com/gitleaks/gitleaks",
+      "source_commit": "83d9cd684c87d95d656c1458ef04895a7f1cbd8e",
+      "upstream_project_spdx": "MIT",
+      "license_blob_sha": "3c270b36c539ca8fbc4cc1017d3cbb7be1e44bbc",
+      "archive_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz",
+      "archive_sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+      "archive_member": "gitleaks",
+      "binary_sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+      "local_path": ".tool-cache/native/gitleaks/gitleaks",
+      "platform": "linux-x86_64"
+    }
+  ]
+}

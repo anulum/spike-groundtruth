@@ -1,0 +1,18 @@
+{
+  "title": "SPIKE-GROUNDTRUTH",
+  "upload_type": "software",
+  "description": "Local repository validation tooling and architecture for synthetic event-vision, audio and industrial-control stimuli. No generator runtime, domain qualification or release is declared.",
+  "creators": [
+    {
+      "name": "Šotek, Miroslav",
+      "orcid": "0009-0009-3560-0851",
+      "affiliation": "ANULUM"
+    }
+  ],
+  "license": "AGPL-3.0-or-later",
+  "keywords": [
+    "synthetic stimuli",
+    "repository validation",
+    "neuromorphic computing"
+  ]
+}

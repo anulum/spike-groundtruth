@@ -1,0 +1,49 @@
+{
+  "observed_utc": "2026-10-23T01:57:26.482837+00:00",
+  "actions": [
+    {
+      "repository": "actions/checkout",
+      "version": "v7.0.1",
+      "commit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "license": "MIT",
+      "license_blob_sha": "a67dca8b4f65d6bd351f6b1e333ce2cd84d843a5",
+      "source": "https://github.com/actions/checkout/tree/3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "repository": "actions/setup-python",
+      "version": "v7.0.0",
+      "commit": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+      "license": "MIT",
+      "license_blob_sha": "a426ef259d6c5d705e9c1405075c3b318093c65e",
+      "source": "https://github.com/actions/setup-python/tree/5fda3b95a4ea91299a34e894583c3862153e4b97"
+    },
+    {
+      "repository": "astral-sh/setup-uv",
+      "version": "v10.3.0",
+      "commit": "1c37ad07a6a961277cf70c0d37d6f313000f5884",
+      "license": "MIT",
+      "license_blob_sha": "412aaf1bc1e74259e9a07f02f8fdd06f9adb0136",
+      "source": "https://github.com/astral-sh/setup-uv/tree/1c37ad07a6a961277cf70c0d37d6f313000f5884"
+    },
+    {
+      "repository": "github/codeql-action",
+      "version": "v4.39.0",
+      "commit": "6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee",
+      "license": "MIT",
+      "license_blob_sha": "b50625eb63949013cae604b1cadd42cfa1eaf825",
+      "source": "https://github.com/github/codeql-action/tree/6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee"
+    }
+  ],
+  "bootstrap_artifact": {
+    "name": "uv-x86_64-unknown-linux-gnu.tar.gz",
+    "version": "0.13.4",
+    "source": "https://github.com/astral-sh/uv/releases/download/0.13.4/uv-x86_64-unknown-linux-gnu.tar.gz",
+    "digest": "sha256:2b428396f12572d4429cf210ca234dd599a33b3af0958a4d5ed569d63e3f344f"
+  },
+  "codeql_bundle": {
+    "version": "2.27.2",
+    "source": "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.2/codeql-bundle-linux64.tar.gz",
+    "expected_sha256": "f002864be6dd8d5d7bdb123aaf7291ec8e291012bd9f70b6d2362f730db52aeb",
+    "observation": "Primary release metadata verified; no local bundle download, analysis, hosted run or licence/service qualification asserted."
+  }
+}

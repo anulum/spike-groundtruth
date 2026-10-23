@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Commercial license available
+# © Concepts 1996–2026 Miroslav Šotek. All rights reserved.
+# © Code 2020–2026 Miroslav Šotek. All rights reserved.
+# ORCID: 0009-0009-3560-0851
+# Contact: www.anulum.li | protoscience@anulum.li
+# SPIKE-GROUNDTRUTH — repository validation tooling
+
+minimum_pre_commit_version: '4.7.0'
+default_install_hook_types: [pre-commit]
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Exact locked Ruff lint
+        entry: .venv/bin/python -m ruff check
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: Exact locked Ruff formatting
+        entry: .venv/bin/python -m ruff format --check
+        language: system
+        types: [python]
+      - id: strict-types
+        name: Strict native Python typing
+        entry: .venv/bin/python -m mypy --strict tools tests
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: metadata
+        name: Independent metadata identity
+        entry: .venv/bin/python tools/check_repository_metadata.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: source-provenance
+        name: Maintained source and licence provenance
+        entry: .venv/bin/python tools/check_source_provenance.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: workflow-policy
+        name: Distributed workflow policy
+        entry: .venv/bin/python tools/check_workflow_policy.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: dependency-alignment
+        name: Exact development dependency alignment
+        entry: .venv/bin/python tools/check_dependency_alignment.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: documentation
+        name: Strict rendered documentation
+        entry: .venv/bin/python tools/check_documentation.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: repository-inventory
+        name: Complete repository inventory
+        entry: .venv/bin/python tools/check_repository_inventory.py --root . --json
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: reuse
+        name: Native REUSE licence validation
+        entry: .venv/bin/python -m reuse lint
+        language: system
+        pass_filenames: false
+        always_run: true
