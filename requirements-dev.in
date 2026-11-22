@@ -28,4 +28,4 @@ types-jsonschema==4.26.0.20261006
 types-markdown==3.10.2.20261007
 types-pyyaml==6.0.12.20260906
 uv==0.13.4
-zizmor==1.31.1
+zizmor==1.32.0
