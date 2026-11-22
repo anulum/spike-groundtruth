@@ -1,7 +1,8 @@
 {
   "repository_name": "SPIKE-GROUNDTRUTH",
   "owner_group": "SC-NEUROMORPHIC-COMPUTING-SYSTEMS",
-  "lifecycle": "local_scaffold",
+  "lifecycle": "public_repository",
+  "public_remote": "https://github.com/anulum/spike-groundtruth",
   "evidence_maturity": "architecture_only",
   "capabilities": [],
   "claims": [],

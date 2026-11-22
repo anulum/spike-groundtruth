@@ -2,11 +2,11 @@
   "capabilities": [],
   "claims": [],
   "evidence_maturity": "architecture_only",
-  "lifecycle": "local_scaffold",
+  "lifecycle": "public_repository",
   "qualified_owned_schema_ids": [],
   "repository_name": "SPIKE-GROUNDTRUTH",
   "source_metadata": {
     "path": "repository-domain.json",
-    "sha256": "8124d3aada1c75d1754f5df3eb07d265ddeb8d400087848079067afbeecc7a54"
+    "sha256": "39f1208e543648645d77712b67a16ae57f5582e615423217c83b5914242383a4"
   }
 }

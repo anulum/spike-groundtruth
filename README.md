@@ -12,6 +12,8 @@ SPIKE-GROUNDTRUTH — repository governance and provenance
 
 SPIKE-GROUNDTRUTH defines the boundary for reproducible synthetic event-vision, audio and industrial-control stimuli with explicit model truth. The current implementation provides repository validation tooling. Generators, independent truth checks, container output, quality integration and whole-byte regeneration are planned; no stimulus-generation package or qualified scientific capability is installed.
 
+SPIKE-GROUNDTRUTH is part of the **SC Neuromorphic Computing Systems** group (SC-NEUROMORPHIC-COMPUTING-SYSTEMS). The [group and project map](https://github.com/anulum/sc-neurocore/blob/main/docs/ecosystem.md) shows the whole programme and where this repository sits in it.
+
 The local metadata explicitly records `local_scaffold`, `architecture_only`, empty capabilities, claims and qualified schemas. The planned identifier `groundtruth_stimulus.manifest.v1` is a declaration, not a registered or accepted evidence format.
 
 ## Validate repository metadata

@@ -17,7 +17,7 @@ from groundtruth_validation.inputs import read_file, read_json
 from groundtruth_validation.report import Finding, Refusal, Report
 
 # Reviewed independently of the descriptor. Policy updates require code review.
-SCHEMA_SHA256 = "9a07975e0b77c7b602e2a28b2a760e51e908cb0d611ddfab8ed08ce419fc9b0e"
+SCHEMA_SHA256 = "982d28b11976002ab4f01ac4ce70811840a7f5d0ef70041d6ac37c57f2ece8ce"
 SCHEMA_PATH = "schemas/repository-domain.schema.json"
 METADATA_PATH = "repository-domain.json"
 

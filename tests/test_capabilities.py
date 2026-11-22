@@ -24,7 +24,7 @@ def test_generate_and_verify_actual_metadata(repository: Path) -> None:
     original = output.read_bytes()
     assert json.loads(original) == {
         "repository_name": "SPIKE-GROUNDTRUTH",
-        "lifecycle": "local_scaffold",
+        "lifecycle": "public_repository",
         "evidence_maturity": "architecture_only",
         "capabilities": [],
         "claims": [],

@@ -36,7 +36,7 @@ def inventory_bytes(raw_metadata: bytes) -> bytes:
         json.dumps(
             {
                 "repository_name": "SPIKE-GROUNDTRUTH",
-                "lifecycle": "local_scaffold",
+                "lifecycle": "public_repository",
                 "evidence_maturity": "architecture_only",
                 "capabilities": [],
                 "claims": [],
